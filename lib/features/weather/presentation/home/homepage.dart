@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_web_app/features/weather/bloc/history/history_bloc.dart';
+import 'package:weather_web_app/features/weather/bloc/history_bloc/history_bloc.dart';
 import 'package:weather_web_app/features/weather/bloc/weather_bloc/weather_bloc.dart';
 import 'package:weather_web_app/features/weather/model/forecast.dart';
 import 'package:weather_web_app/features/weather/model/weather.dart';
@@ -8,7 +8,7 @@ import 'package:weather_web_app/features/weather/presentation/home/layouts/weath
 import 'package:weather_web_app/features/weather/presentation/home/layouts/search_section.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:go_router/go_router.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -51,13 +51,13 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HistoryPage()),
-              );
+              context.go('/history');
             },
           ),
         ],
+        iconTheme: const IconThemeData(
+          color: Colors.white, 
+        ),
       ),
       body: Container(
         color: const Color.fromARGB(255, 184, 224, 244),

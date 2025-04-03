@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather_web_app/features/weather/model/forecast.dart';
 import 'package:weather_web_app/features/weather/model/weather.dart';
+import 'package:weather_web_app/features/weather/presentation/email/email_supriction_page.dart';
 import 'package:weather_web_app/features/weather/presentation/home/layouts/forecast_card.dart';
 import 'package:weather_web_app/features/weather/utils/constants.dart';
 
@@ -16,6 +17,19 @@ class WeatherSection extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EmailSubscriptionPage(
+                    initialCityName: weatherData?.cityName,
+                  ),
+                ),
+              );
+            },
+            child: const Text('Subscribe to Daily Forecast'),
+          ),
           Card(
             elevation: 4,
             color: Colors.blue[600],
@@ -35,7 +49,7 @@ class WeatherSection extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            weatherData!.cityName,
+                            weatherData.cityName,
                             style: TextStyle(
                               fontSize: AppConstants.fontCity(context),
                               fontWeight: FontWeight.bold,
@@ -45,7 +59,7 @@ class WeatherSection extends StatelessWidget {
                           Text(
                             ' (${weatherData!.date})',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: AppConstants.fontDetail(context),
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -72,14 +86,14 @@ class WeatherSection extends StatelessWidget {
                       Text(
                         'Humidity: ${weatherData?.humidity} %',
                         style: TextStyle(
-                          fontSize:AppConstants.fontDetail(context),
+                          fontSize: AppConstants.fontDetail(context),
                           color: Colors.white,
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 8),
-                  Column( 
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(

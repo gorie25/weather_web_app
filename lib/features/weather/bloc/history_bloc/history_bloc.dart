@@ -3,61 +3,15 @@ import 'package:equatable/equatable.dart';
 import 'package:weather_web_app/features/weather/data/repository/history_repository.dart';
 import 'package:weather_web_app/features/weather/model/history.dart';
 import 'package:weather_web_app/features/weather/model/weather.dart';
-
-// Events
-abstract class HistoryEvent extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class LoadHistory extends HistoryEvent {}
-
-class AddWeatherToHistory extends HistoryEvent {
-  final WeatherModel weather;
-
-  AddWeatherToHistory(this.weather);
-
-  @override
-  List<Object?> get props => [weather];
-}
-
-class ClearHistory extends HistoryEvent {}
-
-// States
-abstract class HistoryState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class HistoryInitial extends HistoryState {}
-
-class HistoryLoading extends HistoryState {}
-
-class HistoryLoaded extends HistoryState {
-  final HistoryWeather history;
-
-  HistoryLoaded(this.history);
-
-  @override
-  List<Object?> get props => [history];
-}
-
-class HistoryError extends HistoryState {
-  final String message;
-
-  HistoryError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-// Bloc
+part 'history_bloc_event.dart';
+part 'history_bloc_state.dart';
 class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   final HistoryRepository historyRepository;
 
   HistoryBloc({required this.historyRepository}) : super(HistoryInitial()) {
     on<LoadHistory>(_onLoadHistory);
     on<AddWeatherToHistory>(_onAddWeatherToHistory);
+    on<ClearHistory>(_onClearHistory);
   }
 
   void _onLoadHistory(LoadHistory event, Emitter<HistoryState> emit) async {
@@ -95,5 +49,13 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     }
   }
 
-
+  void _onClearHistory(
+      ClearHistory event, Emitter<HistoryState> emit) async {
+    try {
+      await historyRepository.clearHistory();
+      emit(HistoryLoaded(HistoryWeather(weatherList: [])));
+    } catch (e) {
+      emit(HistoryError('Failed to clear history'));
+    }
+  }
 }

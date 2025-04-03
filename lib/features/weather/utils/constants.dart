@@ -8,7 +8,6 @@ class AppConstants {
     return MediaQuery.of(context).size.width > 600 ? 18 : 16;
   }
 
-  // Hàm để tính toán chiều cao của icon
   static double sizeIcon(BuildContext context) {
     return MediaQuery.of(context).size.width > 600 ? 150 : 100;
   }

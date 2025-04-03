@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:weather_web_app/features/weather/bloc/history_bloc/history_bloc.dart';
+import 'package:weather_web_app/features/weather/presentation/history/layouts/weather_history_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_web_app/features/weather/bloc/history/history_bloc.dart';
-import 'package:weather_web_app/features/weather/model/weather.dart';
+import 'package:go_router/go_router.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -21,69 +22,54 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Weather History'),
+        title: const Text(
+          'Weather History',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/');
+          },
+        ),
+        centerTitle: true,
         backgroundColor: Colors.blue[600],
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Màu sắc của biểu tượng
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
               context.read<HistoryBloc>().add(ClearHistory());
-              Navigator.pop(context);
             },
           ),
         ],
       ),
-      body: BlocBuilder<HistoryBloc, HistoryState>(
-        builder: (context, state) {
-          if (state is HistoryLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is HistoryLoaded) {
-            if (state.history.weatherList.isEmpty) {
-              return const Center(child: Text('No history available'));
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: BlocBuilder<HistoryBloc, HistoryState>(
+          builder: (context, state) {
+            if (state is HistoryLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is HistoryLoaded) {
+              return ListView.builder(
+                itemCount: state.history.weatherList.length,
+                itemBuilder: (context, index) {
+                  final weather = state.history.weatherList[index];
+                  return WeatherHistoryCard(weather: weather);
+                },
+              );
+            } else if (state is HistoryError) {
+              return Center(child: Text(state.message));
             }
-            return ListView.builder(
-              itemCount: state.history.weatherList.length,
-              itemBuilder: (context, index) {
-                final weather = state.history.weatherList[index];
-                return WeatherHistoryCard(weather: weather);
-              },
-            );
-          } else if (state is HistoryError) {
-            return Center(child: Text(state.message));
-          }
-          return const Center(child: Text('No history available'));
-        },
-      ),
-    );
-  }
-}
-
-class WeatherHistoryCard extends StatelessWidget {
-  final WeatherModel weather;
-
-  const WeatherHistoryCard({super.key, required this.weather});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(8.0),
-      child: ListTile(
-        title: Text(
-          weather.cityName,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+            return const Center(child: Text('No history available'));
+          },
         ),
-        subtitle: Text(weather.date),
-        trailing: Text(
-          '${weather.temperatureC}°C',
-          style: const TextStyle(fontSize: 20),
-        ),
-        onTap: () {
-          // context.read<WeatherBloc>().add(FetchWeather(weather.cityName));
-          Navigator.pop(context);
-        },
       ),
     );
   }

@@ -10,7 +10,6 @@ class HistoryWeather {
   factory HistoryWeather.fromJson(Map<String, dynamic> json) {
     var list = json['weatherList'] as List;
     List<WeatherModel> weatherHistoryList = list.map((i) {
-      // Giải mã từng phần tử mà không sử dụng fromJson của WeatherModel
       return WeatherModel(
         cityName: i['cityName'],
         condition: i['condition'],
@@ -19,9 +18,7 @@ class HistoryWeather {
         wind: i['wind'],
         humidity: i['humidity'],
         date: i['date'],
-        feelsLikeC: null,
-        windDirection: '',
-        pressureMb: null,
+
       );
     }).toList();
 

@@ -5,11 +5,10 @@ class WeatherModel {
   final String condition;
   final String iconUrl;
   final double temperatureC;
-  final double? feelsLikeC;
+
   final double wind;
   final double humidity;
-  final String? windDirection;
-  final double? pressureMb;
+
   final String date; // Thêm trường ngày
 
   WeatherModel({
@@ -17,11 +16,8 @@ class WeatherModel {
     required this.condition,
     required this.iconUrl,
     required this.temperatureC,
-    required this.feelsLikeC,
     required this.wind,
     required this.humidity,
-    required this.windDirection,
-    required this.pressureMb,
     required this.date, // Thêm ngày vào constructor
   });
 
@@ -37,18 +33,16 @@ class WeatherModel {
       condition: json['current']['condition']['text'],
       iconUrl: 'https:' + json['current']['condition']['icon'],
       temperatureC: json['current']['temp_c'],
-      feelsLikeC: json['current']['feelslike_c'],
       wind: json['current']['wind_kph'],
       humidity: json['current']['humidity'],
-      windDirection: json['current']['wind_dir'],
-      pressureMb: json['current']['pressure_mb'],
+
       date: date, // Gán giá trị ngày
     );
   }
 
   @override
   String toString() {
-    return 'Weather in $cityName: $condition, Temp: ${temperatureC}°C, Feels like: ${feelsLikeC}°C, Wind: $wind kph, Humidity: $humidity%, Pressure: $pressureMb mb, Date: $date';
+    return 'Weather in $cityName: $condition, Temp: ${temperatureC}°C,  Wind: $wind kph, Humidity: $humidity%, Date: $date';
   }
 
   // Method to convert an instance to JSON
@@ -56,7 +50,7 @@ class WeatherModel {
     return {
       'cityName': cityName,
       'condition': condition,
-      'localtime': date,
+      'date': date,
       'iconUrl': iconUrl,
       'temperature': temperatureC,
       'wind': wind,
